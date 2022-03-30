@@ -1,1 +1,49 @@
-<mxfile host="app.diagrams.net" modified="2022-03-30T09:11:31.434Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36" version="17.2.4" etag="7DeU8K_AnTtNoMpLQ7OG" type="github"><diagram id="wG6yxt-1R1h-bDuJQsV6">UzV2zq1wL0osyPDNT0nNUTV2VTV2LsrPL4GwciucU3NyVI0MMlNUjV1UjYwMgFjVyA2HrCFY1qAgsSg1rwSLBiADYTaQg2Y1AA==</diagram></mxfile>
+<mxfile host="app.diagrams.net" modified="2022-03-30T10:21:31.591Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36" etag="uvtbAabz3htoufqcEtyO" version="17.2.4" type="github">
+  <diagram id="wG6yxt-1R1h-bDuJQsV6" name="Page-1">
+    <mxGraphModel dx="868" dy="488" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="1yMTnW_rsB13sBGqcJaD-1" value="Feature cadastrar vaga" style="swimlane;" vertex="1" parent="1">
+          <mxGeometry x="110" y="100" width="485.5" height="400" as="geometry" />
+        </mxCell>
+        <mxCell id="1yMTnW_rsB13sBGqcJaD-4" value="&lt;b style=&quot;font-size: 15px&quot;&gt;Como &lt;/b&gt;um empregador &lt;b&gt;eu quero &lt;/b&gt;cadastrar novas vagas de emprego &lt;br style=&quot;font-size: 15px&quot;&gt;&lt;b&gt;para &lt;/b&gt;divulgar a vaga" style="text;align=left;verticalAlign=top;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;html=1;fontSize=15;" vertex="1" parent="1yMTnW_rsB13sBGqcJaD-1">
+          <mxGeometry x="15.5" y="50" width="470" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="1yMTnW_rsB13sBGqcJaD-11" value="&lt;b&gt;Dado &lt;/b&gt;que o empregador esteja logado&lt;br&gt;&lt;b&gt;E &lt;/b&gt;que seja informado o titulo da vaga&lt;br&gt;&lt;b&gt;E &lt;/b&gt;a sua descrição&lt;br&gt;&lt;b&gt;E &lt;/b&gt;o valor do salário&lt;br&gt;&lt;b&gt;E &lt;/b&gt;a quantidade de vagas" style="text;html=1;align=left;verticalAlign=top;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=15;" vertex="1" parent="1yMTnW_rsB13sBGqcJaD-1">
+          <mxGeometry x="15.5" y="130" width="270" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="1yMTnW_rsB13sBGqcJaD-12" value="&lt;b&gt;Quando &lt;/b&gt;realizado o cadastro" style="text;html=1;align=left;verticalAlign=top;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=15;" vertex="1" parent="1yMTnW_rsB13sBGqcJaD-1">
+          <mxGeometry x="15.5" y="230" width="210" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="1yMTnW_rsB13sBGqcJaD-13" value="&lt;b&gt;Então &lt;/b&gt;a vaga de ser cadastrada &lt;br&gt;&lt;b&gt;E&lt;/b&gt; será exibido a mensagem &quot; Vaga cadastrada&quot;" style="text;html=1;align=left;verticalAlign=top;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=15;" vertex="1" parent="1yMTnW_rsB13sBGqcJaD-1">
+          <mxGeometry x="15.5" y="256" width="330" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="1yMTnW_rsB13sBGqcJaD-18" value="&lt;span style=&quot;font-size: 17px&quot;&gt;&lt;b&gt;Critério de aceite:&lt;/b&gt;&lt;/span&gt;" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1yMTnW_rsB13sBGqcJaD-1">
+          <mxGeometry x="8" y="320" width="160" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="1yMTnW_rsB13sBGqcJaD-19" value="A vaga deve ser vista entre as vagas cadastradas com todas&amp;nbsp;&lt;br&gt;as informações informadas durante o cadastro" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=15;" vertex="1" parent="1yMTnW_rsB13sBGqcJaD-1">
+          <mxGeometry x="15.5" y="340" width="420" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="1yMTnW_rsB13sBGqcJaD-5" value="" style="endArrow=none;html=1;rounded=0;exitX=0;exitY=0.25;exitDx=0;exitDy=0;entryX=1;entryY=0.25;entryDx=0;entryDy=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="110" y="199" as="sourcePoint" />
+            <mxPoint x="595.5" y="199" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="1yMTnW_rsB13sBGqcJaD-9" value="&lt;b&gt;&lt;font style=&quot;font-size: 17px&quot;&gt;Cenário:&lt;/font&gt;&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="114" y="210" width="80" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="1yMTnW_rsB13sBGqcJaD-15" value="" style="endArrow=none;html=1;rounded=0;exitX=0;exitY=0.25;exitDx=0;exitDy=0;entryX=1;entryY=0.25;entryDx=0;entryDy=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="109" y="406.5" as="sourcePoint" />
+            <mxPoint x="594.5" y="406.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="1yMTnW_rsB13sBGqcJaD-17" value="&lt;span style=&quot;font-size: 17px&quot;&gt;&lt;b&gt;História do usuário:&lt;/b&gt;&lt;/span&gt;" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="117" y="131" width="180" height="20" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
