@@ -2,11 +2,6 @@
 <NavbarUser/>
     <div class="px-4 py-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20">
     <div class="max-w-xl mb-10 md:mx-auto sm:text-center lg:max-w-2xl md:mb-12">
-      <div>
-        <p class="inline-block px-5 py-2 mb-4 text-xs font-extrabold tracking-wider text-white uppercase rounded-full bg-green-500">
-          Novas vagas!!
-        </p>
-      </div>
       <h2 class="max-w-lg mb-6 font-sans text-3xl font-bold leading-none tracking-tight text-white sm:text-4xl md:mx-auto">
         <span class="relative inline-block text-white">
           <svg viewBox="0 0 52 24" fill="currentColor" class="absolute top-0 left-0 z-0 hidden w-32 -mt-8 -ml-20 text-blue-gray-100 lg:w-32 lg:-ml-28 lg:-mt-10 sm:block">
@@ -62,7 +57,7 @@ export default {
                 step: 'Passo 1', 
                 desc: 'Crie sua conta caso não tenha, cadastre suas informações e tenha a facilidade em suas mãos.',
                 btnDesc: 'Criar conta',
-                url: '/entrar'
+                url: '/registro'
                 },
                 {
                 step: 'Passo 2', 

@@ -38,7 +38,7 @@ namespace JobCoinAPI
 			});
 		}
 
-		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DataContext context)
 		{
 			if (env.IsDevelopment())
 			{
@@ -57,6 +57,8 @@ namespace JobCoinAPI
 			{
 				endpoints.MapControllers();
 			});
+
+			context.Database.Migrate();
 		}
 	}
 }
