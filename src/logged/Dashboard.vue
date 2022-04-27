@@ -93,11 +93,112 @@
                             <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Remover</a>
                         </td>
                     </tr>
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
+                            Web Developer
+                        </th>
+                        <td class="px-6 py-4">
+                            Full-stack
+                        </td>
+                        <td class="px-6 py-4">
+                            Home office
+                        </td>
+                        <td class="px-6 py-4">
+                            $2999
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Remover</a>
+                        </td>
+                    </tr>
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
+                            Arquiteto de cloud
+                        </th>
+                        <td class="px-6 py-4">
+                            Back-end
+                        </td>
+                        <td class="px-6 py-4">
+                            Híbrido
+                        </td>
+                        <td class="px-6 py-4">
+                            $1999
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Remover</a>
+                        </td>
+                    </tr>
+                    <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
+                            Desenvolvedor Vue 3 {{ info }}
+                        </th>
+                        <td class="px-6 py-4">
+                            Front-end
+                        </td>
+                        <td class="px-6 py-4">
+                            Presencial
+                        </td>
+                        <td class="px-6 py-4">
+                            $1999
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Remover</a>
+                        </td>
+                    </tr>
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
+                            Web Developer
+                        </th>
+                        <td class="px-6 py-4">
+                            Full-stack
+                        </td>
+                        <td class="px-6 py-4">
+                            Home office
+                        </td>
+                        <td class="px-6 py-4">
+                            $2999
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Remover</a>
+                        </td>
+                    </tr>
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
+                            Arquiteto de cloud
+                        </th>
+                        <td class="px-6 py-4">
+                            Back-end
+                        </td>
+                        <td class="px-6 py-4">
+                            Híbrido
+                        </td>
+                        <td class="px-6 py-4">
+                            $1999
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Remover</a>
+                        </td>
+                    </tr>
+                    <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
+                            Desenvolvedor Vue 3 {{ info }}
+                        </th>
+                        <td class="px-6 py-4">
+                            Front-end
+                        </td>
+                        <td class="px-6 py-4">
+                            Presencial
+                        </td>
+                        <td class="px-6 py-4">
+                            $1999
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Remover</a>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
     </div>
-    
     <Footer />
 </div>
 </template>
@@ -134,5 +235,8 @@ export default {
 <style lang="postcss" scoped>
 body {
    @apply font-semibold;
+}
+footer{
+position: relative;
 }
 </style>
