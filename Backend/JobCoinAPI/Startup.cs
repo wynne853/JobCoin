@@ -28,10 +28,12 @@ namespace JobCoinAPI
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddDbContext<DataContext>(options =>
-					options.UseNpgsql(Configuration.GetConnectionString("PostgreDB")));
-			
+			{
+				options.UseNpgsql(Configuration.GetConnectionString("PostgreDB"));
+			});
+
 			services.AddControllers();
-			
+
 			services.AddSwaggerGen(c =>
 			{
 				c.SwaggerDoc("v1", new OpenApiInfo { Title = "JobCoinAPI", Version = "v1" });

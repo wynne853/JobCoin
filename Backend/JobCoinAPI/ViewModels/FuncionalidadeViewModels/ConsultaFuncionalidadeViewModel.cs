@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace JobCoinAPI.Models
+namespace JobCoinAPI.ViewModels.FuncionalidadeViewModels
 {
-	public class Funcionalidade
+	public class ConsultaFuncionalidadeViewModel
 	{
 		public Guid IdFuncionalidade { get; set; }
 

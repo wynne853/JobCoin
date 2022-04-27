@@ -11,9 +11,14 @@ namespace JobCoinAPI.Data
 	public class DataContext : DbContext
 	{
 		public DbSet<Funcionalidade> Funcionalidades { get; set; }
+		
 		public DbSet<Perfil> Perfis { get; set; }
+		
 		public DbSet<PerfilFuncionalidade> PerfilFuncionalidades { get; set; }
+		
 		public DbSet<Usuario> Usuarios { get; set; }
+
+		public DbSet<Vaga> Vagas { get; set; }
 
 		public DataContext(DbContextOptions<DataContext> options) : base(options)
 		{
@@ -26,6 +31,8 @@ namespace JobCoinAPI.Data
 			modelBuilder.Entity<Perfil>().Map();
 			modelBuilder.Entity<PerfilFuncionalidade>().Map();
 			modelBuilder.Entity<Usuario>().Map();
+			modelBuilder.Entity<Vaga>().Map();
+
 			base.OnModelCreating(modelBuilder);
 		}
 	}

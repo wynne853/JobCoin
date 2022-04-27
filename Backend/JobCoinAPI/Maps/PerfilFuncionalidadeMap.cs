@@ -13,11 +13,11 @@ namespace JobCoinAPI.Maps
 			entity.HasKey(perfilFuncionalidade => new { perfilFuncionalidade.IdPerfil, perfilFuncionalidade.IdFuncionalidade });
 
 			entity.HasOne(perfilFuncionalidade => perfilFuncionalidade.Perfil)
-				.WithMany(perfil => perfil.Funcionalidades)
+				.WithMany()
 				.HasForeignKey(perfilFuncionalidade => perfilFuncionalidade.IdPerfil);
 
 			entity.HasOne(perfilFuncionalidade => perfilFuncionalidade.Funcionalidade)
-				.WithMany(funcionalidade => funcionalidade.Perfis)
+				.WithMany()
 				.HasForeignKey(perfilFuncionalidade => perfilFuncionalidade.IdFuncionalidade);
 
 			entity.Property(perfilFuncionalidade => perfilFuncionalidade.IdPerfil)
