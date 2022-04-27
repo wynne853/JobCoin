@@ -34,13 +34,13 @@
         
         <ul class="flex items-center hidden ml-auto space-x-8 lg:flex">
           <li>
-            <router-link to="/entrar">
+            <router-link to="/">
             <a
               class="inline-flex items-center justify-center h-12 px-6 font-medium tracking-wide text-white transition duration-200 rounded shadow-md bg-gray-700 hover:bg-deep-purple-accent-700 focus:shadow-outline focus:outline-none transform transition duration-1000 hover:scale-90 cursor-pointer"
               aria-label="Entrar"
               title="Entrar"
             >
-              Entrar
+              Sair
             </a>
             </router-link>
           </li>
