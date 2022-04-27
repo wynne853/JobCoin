@@ -30,3 +30,10 @@ import Footer from './components/Footer.vue'
         methods: {},
     };
 </script>
+
+<style lang="postcss">
+body {
+   @apply bg-gray-900;
+}
+
+</style>

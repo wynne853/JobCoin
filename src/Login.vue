@@ -1,6 +1,6 @@
 <template>
 <NavbarUser/>
-  <div class="overflow-hidden bg-gray-900">
+  <div id="div-principal" class="overflow-hidden bg-gray-900">
     <div class="px-4 py-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20">
       <div class="flex flex-col items-center justify-between xl:flex-row">
         <div class="w-full max-w-xl mb-12 xl:pr-16 xl:mb-0 xl:w-7/12">
@@ -140,3 +140,9 @@ export default {
 
 }
 </script>
+
+<style>
+#div-principal {
+  min-height: 588px;
+}
+</style>

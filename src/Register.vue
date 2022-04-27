@@ -20,7 +20,6 @@
                   <circle cx="1" cy="1" r=".7"></circle>
                 </pattern>
               </defs>
-              <rect fill="url(#766323e1-e594-4ffd-a688-e7275079d540)" width="52" height="24"></rect>
             </svg>
             <div class="relative bg-white rounded shadow-2xl p-7 sm:p-10">
               <h3 class="mb-4 text-xl font-semibold sm:text-center sm:mb-6 sm:text-2xl">
