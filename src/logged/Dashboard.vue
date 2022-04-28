@@ -222,8 +222,18 @@ export default {
     mounted () {
         axios.get('https://economia.awesomeapi.com.br/last/USD-BRL').then(response => (this.cotacaoDolar = response.data.USDBRL.bid))
     },
+    // email: "usuario1@teste.com"
+    // id: "f6b802b5-39d3-4fd4-be1d-7816daafa551"
+    // nome: "usuario1"
+    // perfil: {idPerfil: '151acb0a-f198-4fb4-a5c2-67ae55b263ed', nomePerfil: 'Kaio'}
+    // vagasCriadas: null
+    // vagasFavoritadas: null
     created () {
-        axios.get('https://localhost:5001/v1/usuarios').then(response => (this.info = response.data.nome))
+        axios.get('https://localhost:5001/v1/usuarios/f6b802b5-39d3-4fd4-be1d-7816daafa551')
+        .then(response => {
+            console.log(response.data)
+            // response.data.forEach(e => console.log(e))
+        }).catch(error => console.log(error.menssage))
     },  
     calcularDolar(){
         const calcularDolar = document.querySelector('#valorDolar')
