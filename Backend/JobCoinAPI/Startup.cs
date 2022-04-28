@@ -30,7 +30,7 @@ namespace JobCoinAPI
 			services.AddDbContext<DataContext>(options =>
 			{
 				options.UseNpgsql(Configuration.GetConnectionString("PostgreDB"));
-			});
+			});																			
 
 			services.AddControllers();
 
@@ -48,6 +48,11 @@ namespace JobCoinAPI
 				app.UseSwagger();
 				app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "JobCoinAPI v1"));
 			}
+
+			app.UseCors(builder => builder
+			 .AllowAnyOrigin()
+			 .AllowAnyMethod()
+			 .AllowAnyHeader());
 
 			app.UseHttpsRedirection();
 

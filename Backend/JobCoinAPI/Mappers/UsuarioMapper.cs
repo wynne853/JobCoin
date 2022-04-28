@@ -7,7 +7,7 @@ namespace JobCoinAPI.Mappers
 {
 	public class UsuarioMapper
 	{
-		public static ConsultaUsuarioViewModel ConverterParaViewModel(Usuario usuario)
+		public static ConsultaUsuarioViewModel ConverterParaConsultaUsuarioViewModel(Usuario usuario)
 		{
 			return new ConsultaUsuarioViewModel
 			{
@@ -20,9 +20,25 @@ namespace JobCoinAPI.Mappers
 			};
 		}
 
-		public static ICollection<ConsultaUsuarioViewModel> ConverterParaViewModel(ICollection<Usuario> usuarios)
+		public static RetornoUsuarioViewModel ConverterParaRetornoUsuarioViewModel(Usuario usuario)
 		{
-			return usuarios?.Select(usuario => ConverterParaViewModel(usuario)).ToList();
+			return new RetornoUsuarioViewModel
+			{
+				Id = usuario.IdUsuario,
+				IdPerfil = usuario.IdPerfil,
+				Nome = usuario.Nome,
+				Email = usuario.Email,
+			};
+		}
+
+		public static IEnumerable<ConsultaUsuarioViewModel> ConverterParaConsultaUsuarioViewModel(IEnumerable<Usuario> usuarios)
+		{
+			return usuarios?.Select(usuario => ConverterParaConsultaUsuarioViewModel(usuario)).ToList();
+		}
+
+		public static IEnumerable<RetornoUsuarioViewModel> ConverterParaRetornoUsuarioViewModel(IEnumerable<Usuario> usuarios)
+		{
+			return usuarios?.Select(usuario => ConverterParaRetornoUsuarioViewModel(usuario)).ToList();
 		}
 	}
 }

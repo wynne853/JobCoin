@@ -51,7 +51,7 @@ namespace JobCoinAPI.Controllers
 					VagasFavoritadas = new List<Vaga>()
 				};
 
-				var retornoUsuarioViewModel = UsuarioMapper.ConverterParaViewModel(usuario);
+				var retornoUsuarioViewModel = UsuarioMapper.ConverterParaRetornoUsuarioViewModel(usuario);
 
 				await context.Usuarios.AddAsync(usuario);
 				await context.SaveChangesAsync();
@@ -72,13 +72,13 @@ namespace JobCoinAPI.Controllers
 				.Include(usuario => usuario.Perfil)
 				.ToListAsync();
 
-			var listaUsuarioViewModel = (usuarios == null || usuarios.Count == 0) ? null : UsuarioMapper.ConverterParaViewModel(usuarios);
+			var listaUsuarioViewModel = (usuarios == null || usuarios.Count == 0) ? null : UsuarioMapper.ConverterParaConsultaUsuarioViewModel(usuarios);
 
 			return listaUsuarioViewModel == null ? NoContent() : Ok(listaUsuarioViewModel);
 		}
 
 		[HttpGet]
-		[Route("{id}")]
+		[Route("{idUsuario}")]
 		public async Task<IActionResult> GetByIdAsync([FromServices] DataContext context, [FromRoute] Guid idUsuario)
 		{
 			try
@@ -93,7 +93,7 @@ namespace JobCoinAPI.Controllers
 				.Include(usuario => usuario.VagasFavoritadas)
 				.FirstOrDefaultAsync(usuario => usuario.IdUsuario.Equals(idUsuario));
 
-				var usuarioViewModel = usuario == null ? null : UsuarioMapper.ConverterParaViewModel(usuario);
+				var usuarioViewModel = usuario == null ? null : UsuarioMapper.ConverterParaConsultaUsuarioViewModel(usuario);
 
 				return usuarioViewModel == null ? NoContent() : Ok(usuarioViewModel);
 			}
