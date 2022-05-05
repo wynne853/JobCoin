@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace JobCoinAPI.ViewModels.VagaViewModels
 {
@@ -8,7 +9,10 @@ namespace JobCoinAPI.ViewModels.VagaViewModels
 		[DisplayFormat(ConvertEmptyStringToNull = false)]
 		public string NomeVaga { get; set; }
 
-		[Range(0, float.MaxValue, ErrorMessage = "O valor da vaga deve ser maior que 0.")]
+		[Required]
+		public string DescricaoVaga { get; set; }
+
+		[Range(0, float.MaxValue, ErrorMessage = "O valor da vaga não pode ser negativo.")]
 		public float ValorVaga { get; set; }
 	}
 }

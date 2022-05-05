@@ -7,38 +7,44 @@ namespace JobCoinAPI.Mappers
 {
 	public class UsuarioMapper
 	{
-		public static ConsultaUsuarioViewModel ConverterParaConsultaUsuarioViewModel(Usuario usuario)
+		public static ConsultaGeralUsuarioViewModel ConverterParaConsultaGeralUsuarioViewModel(Usuario usuario)
 		{
-			return new ConsultaUsuarioViewModel
+			return usuario == null ? null : new ConsultaGeralUsuarioViewModel
 			{
-				Id = usuario.IdUsuario,
-				Perfil = PerfilMapper.ConverterParaViewModel(usuario.Perfil),
+				IdUsuario = usuario.IdUsuario,
 				Nome = usuario.Nome,
 				Email = usuario.Email,
-				VagasCriadas = VagaMapper.ConverterParaViewModel(usuario.VagasCriadas),
-				VagasFavoritadas = VagaMapper.ConverterParaViewModel(usuario.VagasFavoritadas),
+				Perfil = PerfilMapper.ConverterParaConsultaViewModel(usuario.Perfil)
 			};
 		}
 
-		public static RetornoUsuarioViewModel ConverterParaRetornoUsuarioViewModel(Usuario usuario)
+		public static ConsultaUnicaUsuarioViewModel ConverterParaConsultaUnicaUsuarioViewModel(Usuario usuario)
 		{
-			return new RetornoUsuarioViewModel
+			return usuario == null ? null : new ConsultaUnicaUsuarioViewModel
 			{
-				Id = usuario.IdUsuario,
-				IdPerfil = usuario.IdPerfil,
+				IdUsuario = usuario.IdUsuario,
 				Nome = usuario.Nome,
 				Email = usuario.Email,
+				Perfil = PerfilMapper.ConverterParaConsultaViewModel(usuario.Perfil),
+				VagasCriadas = VagaMapper.ConverterParaConsultaGeralVagaViewModel(usuario.VagasCriadas),
+				VagasFavoritadas = VagaMapper.ConverterParaConsultaGeralVagaViewModel(usuario.VagasFavoritadas),
 			};
 		}
 
-		public static IEnumerable<ConsultaUsuarioViewModel> ConverterParaConsultaUsuarioViewModel(IEnumerable<Usuario> usuarios)
+		public static IEnumerable<ConsultaGeralUsuarioViewModel> ConverterParaConsultaGeralUsuarioViewModel(IEnumerable<Usuario> usuarios)
 		{
-			return usuarios?.Select(usuario => ConverterParaConsultaUsuarioViewModel(usuario)).ToList();
+			if (usuarios == null || usuarios.Count() == 0)
+				return null;
+
+			return usuarios.Select(usuario => ConverterParaConsultaGeralUsuarioViewModel(usuario)).ToList();
 		}
 
-		public static IEnumerable<RetornoUsuarioViewModel> ConverterParaRetornoUsuarioViewModel(IEnumerable<Usuario> usuarios)
+		public static IEnumerable<ConsultaUnicaUsuarioViewModel> ConverterParaConsultaUnicaUsuarioViewModel(IEnumerable<Usuario> usuarios)
 		{
-			return usuarios?.Select(usuario => ConverterParaRetornoUsuarioViewModel(usuario)).ToList();
+			if (usuarios == null || usuarios.Count() == 0)
+				return null;
+
+			return usuarios.Select(usuario => ConverterParaConsultaUnicaUsuarioViewModel(usuario)).ToList();
 		}
 	}
 }

@@ -8,96 +8,198 @@ using JobCoinAPI.ViewModels.UsuarioViewModels;
 using JobCoinAPI.Models;
 using JobCoinAPI.Mappers;
 using System.Collections.Generic;
+using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 
 namespace JobCoinAPI.Controllers
 {
-	[Route("v1/usuarios")]
+	/// <response code="200">Ok</response>
+	/// <response code="201">Created</response>
+	/// <response code="204">No Content</response>
+	/// <response code="400">Bad Request</response>
+	/// <response code="401">Unauthorized</response>
+	/// <response code="404">Not Found</response>
+	/// <response code="500">Internal Server Error</response>
 	[ApiController]
+	[Authorize]
+	[Route("v1/usuarios")]
 	public class UsuarioController : ControllerBase
 	{
 		[HttpPost]
-		public async Task<IActionResult> PostAsync([FromServices] DataContext context, [FromBody] CriacaoUsuarioViewModel usuarioViewModel)
+		public async Task<IActionResult> PostAsync(
+			[FromServices] DataContext context,
+			[FromBody] CriacaoUsuarioViewModel usuarioViewModel)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest();
 
 			try
 			{
-				var usuario = await context.Usuarios
-				.AsNoTracking()
-				.FirstOrDefaultAsync(usuario => usuario.Email.Equals(usuarioViewModel.Email));
+				var usuarioByName = await context.Usuarios
+					.AsNoTracking()
+					.Where(usuario => usuario.Email.ToLower().Equals(usuarioViewModel.Email.ToLower()))
+					.FirstOrDefaultAsync();
 
-				if (usuario != null)
+				if (usuarioByName != null)
 					return BadRequest("Já existe usuário cadastrado com o 'email' informado.");
 
 				if (usuarioViewModel.IdPerfil.Equals(Guid.Empty))
 					return BadRequest("O 'idPerfil' informado se encontra vazio.");
 
-				var perfil = await context.Perfis
+				var perfilById = await context.Perfis
 					.AsNoTracking()
-					.FirstOrDefaultAsync(perfil => perfil.IdPerfil.Equals(usuarioViewModel.IdPerfil));
+					.Where(perfil => perfil.IdPerfil.Equals(usuarioViewModel.IdPerfil))
+					.FirstOrDefaultAsync();
 
-				if (perfil == null)
+				if (perfilById == null)
 					return BadRequest("Não existe perfil cadastrado com o 'idPerfil' informado.");
 
-				usuario = new Usuario
+				usuarioByName = new Usuario
 				{
 					IdUsuario = Guid.NewGuid(),
 					IdPerfil = usuarioViewModel.IdPerfil,
 					Nome = usuarioViewModel.Nome,
 					Email = usuarioViewModel.Email,
-					Senha = Seguranca.GenerateHashPassword(usuarioViewModel.Senha),
+					Senha = Seguranca.GeradorSenhaHash(usuarioViewModel.Senha),
 					VagasCriadas = new List<Vaga>(),
-					VagasFavoritadas = new List<Vaga>()
+					VagasFavoritadas = new List<VagaFavoritadaUsuario>()
 				};
 
-				var retornoUsuarioViewModel = UsuarioMapper.ConverterParaRetornoUsuarioViewModel(usuario);
-
-				await context.Usuarios.AddAsync(usuario);
+				await context.Usuarios.AddAsync(usuarioByName);
 				await context.SaveChangesAsync();
 
-				return Created($"v1/usuarios/{usuario.IdUsuario}", retornoUsuarioViewModel);
+				usuarioByName.Perfil = perfilById;
+				var retornoUsuarioViewModel = UsuarioMapper.ConverterParaConsultaGeralUsuarioViewModel(usuarioByName);
+
+				return Created($"v1/usuarios/{usuarioByName.IdUsuario}", retornoUsuarioViewModel);
 			}
-			catch (Exception e)
+			catch (Exception)
 			{
 				return StatusCode(500);
 			}
 		}
 
 		[HttpGet]
-		public async Task<IActionResult> GetAllAsync([FromServices] DataContext context)
-		{
-			var usuarios = await context.Usuarios
-				.AsNoTracking()
-				.Include(usuario => usuario.Perfil)
-				.ToListAsync();
-
-			var listaUsuarioViewModel = (usuarios == null || usuarios.Count == 0) ? null : UsuarioMapper.ConverterParaConsultaUsuarioViewModel(usuarios);
-
-			return listaUsuarioViewModel == null ? NoContent() : Ok(listaUsuarioViewModel);
-		}
-
-		[HttpGet]
-		[Route("{idUsuario}")]
-		public async Task<IActionResult> GetByIdAsync([FromServices] DataContext context, [FromRoute] Guid idUsuario)
+		public async Task<IActionResult> GetAllAsync(
+			[FromServices] DataContext context,
+			[FromQuery] string nomeUsuario,
+			[FromQuery] string emailUsuario,
+			[FromQuery] string nomePerfilUsuario,
+			[FromQuery] string ordenar,
+			[FromQuery] int pagina = 1,
+			[FromQuery] int numeroItens = 10)
 		{
 			try
 			{
-				if (idUsuario.Equals(Guid.Empty))
-					return BadRequest("O 'idUsuario' informado se encontra vazio.");
+				var consultaUsuarios = context.Usuarios
+					.AsNoTracking()
+					.Include(usuario => usuario.Perfil)
+					.AsQueryable();
 
-				var usuario = await context.Usuarios
-				.AsNoTracking()
-				.Include(usuario => usuario.Perfil)
-				.Include(usuario => usuario.VagasCriadas)
-				.Include(usuario => usuario.VagasFavoritadas)
-				.FirstOrDefaultAsync(usuario => usuario.IdUsuario.Equals(idUsuario));
+				if (!string.IsNullOrEmpty(nomeUsuario))
+				{
+					consultaUsuarios = consultaUsuarios
+						.Where(usuario =>
+							usuario.Nome.ToLower().Contains(nomeUsuario.ToLower()));
+				}
 
-				var usuarioViewModel = usuario == null ? null : UsuarioMapper.ConverterParaConsultaUsuarioViewModel(usuario);
+				if (!string.IsNullOrEmpty(emailUsuario))
+				{
+					consultaUsuarios = consultaUsuarios
+						.Where(usuario =>
+							usuario.Email.ToLower().Contains(emailUsuario.ToLower()));
+				}
+
+				if (!string.IsNullOrEmpty(nomePerfilUsuario))
+				{
+					consultaUsuarios = consultaUsuarios
+						.Where(usuario =>
+							usuario.Perfil.NomePerfil.ToLower().Contains(nomePerfilUsuario.ToLower()));
+				}
+
+				var camposOrdenacao = string.IsNullOrEmpty(ordenar) ? new List<string>(0) : ordenar.Split(",").ToList();
+
+				foreach (var campo in camposOrdenacao)
+				{
+					switch (campo)
+					{
+						case "nomeUsuario":
+						case "+nomeUsuario":
+							consultaUsuarios = consultaUsuarios
+								.OrderBy(usuario => usuario.Nome);
+							break;
+						case "-nomeUsuario":
+							consultaUsuarios = consultaUsuarios
+								.OrderByDescending(usuario => usuario.Nome);
+							break;
+
+						case "emailUsuario":
+						case "+emailUsuario":
+							consultaUsuarios = consultaUsuarios
+								.OrderBy(usuario => usuario.Email);
+							break;
+						case "-emailUsuario":
+							consultaUsuarios = consultaUsuarios
+								.OrderByDescending(usuario => usuario.Email);
+							break;
+
+						case "nomePerfilUsuario":
+						case "+nomePerfilUsuario":
+							consultaUsuarios = consultaUsuarios
+								.OrderBy(usuario => usuario.Perfil.NomePerfil);
+							break;
+						case "-nomePerfilUsuario":
+							consultaUsuarios = consultaUsuarios
+								.OrderByDescending(usuario => usuario.Perfil.NomePerfil);
+							break;
+							
+						default:
+							break;
+					}
+				}
+
+				int numeroTotalItens = await consultaUsuarios.CountAsync();
+
+				var usuarios = await Paginacao<Usuario>
+					.PaginarConsulta(ref pagina, ref numeroItens, numeroTotalItens, consultaUsuarios).ToListAsync();
+
+				var usuariosViewModels = UsuarioMapper.ConverterParaConsultaGeralUsuarioViewModel(usuarios);
+
+				var retornoUsuarios = Paginacao<ConsultaGeralUsuarioViewModel>
+					.PegarPaginacao(numeroTotalItens, pagina, usuariosViewModels);
+
+				return usuariosViewModels == null ? NoContent() : Ok(retornoUsuarios);
+			}
+			catch (Exception)
+			{
+				return StatusCode(500);
+			}
+		}
+
+		[HttpGet]
+		[Route("{id}")]
+		public async Task<IActionResult> GetByIdAsync(
+			[FromServices] DataContext context,
+			[FromRoute] Guid id)
+		{
+			try
+			{
+				var usuarioById = await context.Usuarios
+					.Include(usuario => usuario.Perfil)
+					.Include(usuario => usuario.VagasCriadas)
+					.Include(usuario => usuario.VagasFavoritadas)
+					.ThenInclude(vagasFavoritada => vagasFavoritada.Vaga)
+					.Include(usuario => usuario.VagasFavoritadas)
+					.ThenInclude(vagasFavoritada => vagasFavoritada.Usuario)
+					.AsSplitQuery()
+					.Where(usuario => usuario.IdUsuario.Equals(id))
+					.FirstOrDefaultAsync();
+
+				var usuarioViewModel = UsuarioMapper.ConverterParaConsultaUnicaUsuarioViewModel(usuarioById);
 
 				return usuarioViewModel == null ? NoContent() : Ok(usuarioViewModel);
 			}
-			catch (Exception e)
+			catch (Exception)
 			{
 				return StatusCode(500);
 			}
@@ -105,48 +207,62 @@ namespace JobCoinAPI.Controllers
 
 		[HttpPut]
 		[Route("{id}")]
-		public async Task<IActionResult> UpdateAsync([FromServices] DataContext context, [FromBody] AlteracaoUsuarioViewModel usuarioViewModel)
+		public async Task<IActionResult> UpdateAsync(
+			[FromServices] DataContext context,
+			[FromBody] AlteracaoUsuarioViewModel usuarioViewModel,
+			[FromRoute] Guid id)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest();
 
 			try
 			{
-				if (usuarioViewModel.IdUsuario.Equals(Guid.Empty))
-					return BadRequest("O 'idUsuario' informado se encontra vazio.");
+				if (id.Equals(Guid.Empty))
+					return BadRequest("O 'id' informado se encontra vazio.");
+
+				if (usuarioViewModel.IdPerfil.Equals(Guid.Empty))
+					return BadRequest("O 'idPerfil' informado se encontra vazio.");
 
 				var usuarioById = await context.Usuarios
-					.AsNoTracking()
-					.FirstOrDefaultAsync(usuario => usuario.IdUsuario.Equals(usuarioViewModel.IdUsuario));
-
-				if (usuarioById == null)
-					return BadRequest("Não existe usuário cadastrado com o 'idUsuario' informado.");
-
-				var usuarioByEmail = await context.Usuarios
 					.AsNoTracking()
 					.Include(usuario => usuario.Perfil)
 					.Include(usuario => usuario.VagasCriadas)
 					.Include(usuario => usuario.VagasFavoritadas)
-					.FirstOrDefaultAsync(usuario => !usuario.IdUsuario.Equals(usuarioViewModel.IdUsuario)
-					&& usuario.Email.Equals(usuarioViewModel.Email));
+					.AsSplitQuery()
+					.Where(usuario => usuario.IdUsuario.Equals(id))
+					.FirstOrDefaultAsync();
+
+				if (usuarioById == null)
+					return BadRequest("Não existe usuário cadastrado com o 'id' informado.");
+
+				var usuarioByEmail = await context.Usuarios
+					.AsNoTracking()
+					.Where(usuario => !usuario.IdUsuario.Equals(id)
+						&& usuario.Email.ToLower().Equals(usuarioViewModel.Email.ToLower()))
+					.FirstOrDefaultAsync();
 
 				if (usuarioByEmail != null)
 					return BadRequest("Já existe outro usuário cadastrado com o 'email' informado.");
 
-				var novoUsuario = new Usuario
-				{
-					IdUsuario = usuarioViewModel.IdUsuario,
-					IdPerfil = usuarioViewModel.IdPerfil,
-					Nome = usuarioViewModel.Nome,
-					Email = usuarioViewModel.Email,
-					Senha = Seguranca.GenerateHashPassword(usuarioViewModel.Senha),
-					VagasCriadas = usuarioById.VagasCriadas,
-					VagasFavoritadas = usuarioById.VagasFavoritadas
-				};
+				var perfilById = await context.Perfis
+					.AsNoTracking()
+					.Where(perfil => perfil.IdPerfil.Equals(usuarioViewModel.IdPerfil))
+					.FirstOrDefaultAsync();
+
+				if (perfilById == null)
+					return BadRequest("Não existe perfil cadastrado com o 'idPerfil' informado.");
+
+				usuarioById.IdPerfil = usuarioViewModel.IdPerfil;
+				usuarioById.Nome = usuarioViewModel.Nome;
+				usuarioById.Email = usuarioViewModel.Email;
+				usuarioById.Senha = Seguranca.GeradorSenhaHash(usuarioViewModel.Senha);
+
+				context.Usuarios.Update(usuarioById);
+				await context.SaveChangesAsync();
 
 				return Ok();
 			}
-			catch (Exception e)
+			catch (Exception)
 			{
 				return StatusCode(500);
 			}
@@ -154,26 +270,29 @@ namespace JobCoinAPI.Controllers
 
 		[HttpDelete]
 		[Route("{id}")]
-		public async Task<IActionResult> DeleteAsync([FromServices] DataContext context, [FromRoute] Guid idUsuario)
+		public async Task<IActionResult> DeleteAsync(
+			[FromServices] DataContext context,
+			[FromRoute] Guid id)
 		{
 			try
 			{
-				if (idUsuario.Equals(Guid.Empty))
-					return BadRequest("O 'idUsuario' informado se encontra vazio.");
+				if (id.Equals(Guid.Empty))
+					return BadRequest("O 'id' informado se encontra vazio.");
 
-				var usuario = await context.Usuarios
+				var usuarioById = await context.Usuarios
 					.AsNoTracking()
-					.FirstOrDefaultAsync(usuario => usuario.IdUsuario.Equals(idUsuario));
+					.Where(usuario => usuario.IdUsuario.Equals(id))
+					.FirstOrDefaultAsync();
 
-				if (usuario == null)
-					return BadRequest("Não existe usuário cadastrado com o 'idUsuario' informado.");
+				if (usuarioById == null)
+					return BadRequest("Não existe usuário cadastrado com o 'id' informado.");
 
-				context.Usuarios.Remove(usuario);
+				context.Usuarios.Remove(usuarioById);
 				await context.SaveChangesAsync();
 
 				return Ok();
 			}
-			catch (Exception e)
+			catch (Exception)
 			{
 				return StatusCode(500);
 			}

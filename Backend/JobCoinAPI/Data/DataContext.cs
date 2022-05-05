@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using JobCoinAPI.Maps;
+﻿using JobCoinAPI.Maps;
 using JobCoinAPI.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,9 +10,11 @@ namespace JobCoinAPI.Data
 		
 		public DbSet<Perfil> Perfis { get; set; }
 		
-		public DbSet<PerfilFuncionalidade> PerfilFuncionalidades { get; set; }
+		public DbSet<PerfilFuncionalidade> PerfisFuncionalidades { get; set; }
 		
 		public DbSet<Usuario> Usuarios { get; set; }
+
+		public DbSet<VagaFavoritadaUsuario> VagasFavoritadas { get; set; }
 
 		public DbSet<Vaga> Vagas { get; set; }
 
@@ -31,6 +29,7 @@ namespace JobCoinAPI.Data
 			modelBuilder.Entity<Perfil>().Map();
 			modelBuilder.Entity<PerfilFuncionalidade>().Map();
 			modelBuilder.Entity<Usuario>().Map();
+			modelBuilder.Entity<VagaFavoritadaUsuario>().Map();
 			modelBuilder.Entity<Vaga>().Map();
 
 			base.OnModelCreating(modelBuilder);

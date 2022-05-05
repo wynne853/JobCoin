@@ -7,18 +7,21 @@ namespace JobCoinAPI.Mappers
 {
 	public class PerfilMapper
 	{
-		public static ConsultaPerfilViewModel ConverterParaViewModel(Perfil perfil)
+		public static ConsultaPerfilViewModel ConverterParaConsultaViewModel(Perfil perfil)
 		{
-			return new ConsultaPerfilViewModel
+			return perfil == null ? null : new ConsultaPerfilViewModel
 			{
 				IdPerfil = perfil.IdPerfil,
 				NomePerfil = perfil.NomePerfil
 			};
 		}
 
-		public static ICollection<ConsultaPerfilViewModel> ConverterParaViewModel(ICollection<Perfil> perfis)
+		public static IEnumerable<ConsultaPerfilViewModel> ConverterParaConsultaViewModel(IEnumerable<Perfil> perfis)
 		{
-			return perfis?.Select(perfil => ConverterParaViewModel(perfil)).ToList();
+			if (perfis == null || perfis.Count() == 0)
+				return null;
+
+			return perfis.Select(perfil => ConverterParaConsultaViewModel(perfil)).ToList();
 		}
 	}
 }

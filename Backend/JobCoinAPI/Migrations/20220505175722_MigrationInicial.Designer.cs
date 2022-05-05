@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace JobCoinAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220427205608_CriacaoTabelaFuncionalidadesEtabelaVagas")]
-    partial class CriacaoTabelaFuncionalidadesEtabelaVagas
+    [Migration("20220505175722_MigrationInicial")]
+    partial class MigrationInicial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -35,7 +35,7 @@ namespace JobCoinAPI.Migrations
 
                     b.HasKey("IdFuncionalidade");
 
-                    b.ToTable("FUNCIONALIDADE");
+                    b.ToTable("FUNCIONALIDADES");
                 });
 
             modelBuilder.Entity("JobCoinAPI.Models.Perfil", b =>
@@ -52,7 +52,7 @@ namespace JobCoinAPI.Migrations
 
                     b.HasKey("IdPerfil");
 
-                    b.ToTable("PERFIL");
+                    b.ToTable("PERFIS");
                 });
 
             modelBuilder.Entity("JobCoinAPI.Models.PerfilFuncionalidade", b =>
@@ -74,7 +74,7 @@ namespace JobCoinAPI.Migrations
 
                     b.HasIndex("PerfilIdPerfil");
 
-                    b.ToTable("PERFIL_FUNCIONALIDADE");
+                    b.ToTable("PERFIL_FUNCIONALIDADES");
                 });
 
             modelBuilder.Entity("JobCoinAPI.Models.Usuario", b =>
@@ -107,7 +107,7 @@ namespace JobCoinAPI.Migrations
 
                     b.HasIndex("IdPerfil");
 
-                    b.ToTable("USUARIO");
+                    b.ToTable("USUARIOS");
                 });
 
             modelBuilder.Entity("JobCoinAPI.Models.Vaga", b =>
@@ -125,6 +125,11 @@ namespace JobCoinAPI.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("DataCriacaoVaga");
 
+                    b.Property<string>("DescricaoVaga")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("DescricaoVaga");
+
                     b.Property<Guid>("IdUsuarioCriacaoVaga")
                         .HasColumnType("uuid")
                         .HasColumnName("IdUsuarioCriacaoVaga");
@@ -134,9 +139,6 @@ namespace JobCoinAPI.Migrations
                         .HasColumnType("text")
                         .HasColumnName("NomeVaga");
 
-                    b.Property<Guid?>("UsuarioIdUsuario")
-                        .HasColumnType("uuid");
-
                     b.Property<float>("ValorVaga")
                         .HasColumnType("real")
                         .HasColumnName("ValorVaga");
@@ -145,9 +147,24 @@ namespace JobCoinAPI.Migrations
 
                     b.HasIndex("IdUsuarioCriacaoVaga");
 
-                    b.HasIndex("UsuarioIdUsuario");
+                    b.ToTable("VAGAS");
+                });
 
-                    b.ToTable("VAGA");
+            modelBuilder.Entity("JobCoinAPI.Models.VagaFavoritadaUsuario", b =>
+                {
+                    b.Property<Guid>("IdVaga")
+                        .HasColumnType("uuid")
+                        .HasColumnName("IdVaga");
+
+                    b.Property<Guid>("IdUsuario")
+                        .HasColumnType("uuid")
+                        .HasColumnName("IdUsuario");
+
+                    b.HasKey("IdVaga", "IdUsuario");
+
+                    b.HasIndex("IdUsuario");
+
+                    b.ToTable("VAGAS_FAVORITADAS");
                 });
 
             modelBuilder.Entity("JobCoinAPI.Models.PerfilFuncionalidade", b =>
@@ -192,11 +209,26 @@ namespace JobCoinAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("JobCoinAPI.Models.Usuario", null)
-                        .WithMany("VagasFavoritadas")
-                        .HasForeignKey("UsuarioIdUsuario");
-
                     b.Navigation("UsuarioCriacaoVaga");
+                });
+
+            modelBuilder.Entity("JobCoinAPI.Models.VagaFavoritadaUsuario", b =>
+                {
+                    b.HasOne("JobCoinAPI.Models.Usuario", "Usuario")
+                        .WithMany("VagasFavoritadas")
+                        .HasForeignKey("IdUsuario")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("JobCoinAPI.Models.Vaga", "Vaga")
+                        .WithMany("Usuarios")
+                        .HasForeignKey("IdVaga")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Usuario");
+
+                    b.Navigation("Vaga");
                 });
 
             modelBuilder.Entity("JobCoinAPI.Models.Perfil", b =>
@@ -209,6 +241,11 @@ namespace JobCoinAPI.Migrations
                     b.Navigation("VagasCriadas");
 
                     b.Navigation("VagasFavoritadas");
+                });
+
+            modelBuilder.Entity("JobCoinAPI.Models.Vaga", b =>
+                {
+                    b.Navigation("Usuarios");
                 });
 #pragma warning restore 612, 618
         }

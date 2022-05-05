@@ -19,6 +19,6 @@ namespace JobCoinAPI.Models
 		
 		public IEnumerable<Vaga> VagasCriadas { get; set; }
 
-		public IEnumerable<Vaga> VagasFavoritadas { get; set; }
+		public IEnumerable<VagaFavoritadaUsuario> VagasFavoritadas { get; set; }
 	}
 }

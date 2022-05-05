@@ -5,8 +5,6 @@ namespace JobCoinAPI.ViewModels.PerfilViewModels
 {
 	public class AlteracaoPerfilViewModel
 	{
-		[Required]
-		public Guid IdPerfil { get; set; }
 
 		[Required(AllowEmptyStrings = false)]
 		[DisplayFormat(ConvertEmptyStringToNull = false)]

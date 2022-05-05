@@ -9,6 +9,6 @@ namespace JobCoinAPI.Models
 
 		public string NomePerfil { get; set; }
 
-		public ICollection<PerfilFuncionalidade> Funcionalidades { get; set; }
+		public IEnumerable<PerfilFuncionalidade> Funcionalidades { get; set; }
 	}
 }

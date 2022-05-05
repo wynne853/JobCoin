@@ -8,7 +8,7 @@ namespace JobCoinAPI.Maps
 	{
 		public static void Map(this EntityTypeBuilder<PerfilFuncionalidade> entity)
 		{
-			entity.ToTable("PERFIL_FUNCIONALIDADE");
+			entity.ToTable("PERFIL_FUNCIONALIDADES");
 
 			entity.HasKey(perfilFuncionalidade => new { perfilFuncionalidade.IdPerfil, perfilFuncionalidade.IdFuncionalidade });
 

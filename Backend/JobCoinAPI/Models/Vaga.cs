@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace JobCoinAPI.Models
 {
@@ -7,6 +8,8 @@ namespace JobCoinAPI.Models
 		public Guid IdVaga { get; set; }
 
 		public string NomeVaga { get; set; }
+
+		public string DescricaoVaga { get; set; }
 
 		public float ValorVaga { get; set; }
 
@@ -17,5 +20,7 @@ namespace JobCoinAPI.Models
 		public DateTime DataCriacaoVaga { get; set; }
 
 		public DateTime DataAtualizacaoVaga { get; set; }
+
+		public IEnumerable<VagaFavoritadaUsuario> Usuarios { get; set; }
 	}
 }

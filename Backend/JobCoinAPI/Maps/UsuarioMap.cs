@@ -8,7 +8,7 @@ namespace JobCoinAPI.Maps
 	{
 		public static void Map(this EntityTypeBuilder<Usuario> entity)
 		{
-			entity.ToTable("USUARIO");
+			entity.ToTable("USUARIOS");
 
 			entity.HasKey(usuario => usuario.IdUsuario);
 

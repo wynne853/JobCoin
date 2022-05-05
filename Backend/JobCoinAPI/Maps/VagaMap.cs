@@ -8,7 +8,7 @@ namespace JobCoinAPI.Maps
 	{
 		public static void Map(this EntityTypeBuilder<Vaga> entity)
 		{
-			entity.ToTable("VAGA");
+			entity.ToTable("VAGAS");
 
 			entity.HasKey(vaga => vaga.IdVaga);
 
@@ -26,6 +26,10 @@ namespace JobCoinAPI.Maps
 
 			entity.Property(vaga => vaga.NomeVaga)
 				.HasColumnName("NomeVaga")
+				.IsRequired();
+
+			entity.Property(vaga => vaga.DescricaoVaga)
+				.HasColumnName("DescricaoVaga")
 				.IsRequired();
 
 			entity.Property(vaga => vaga.ValorVaga)

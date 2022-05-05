@@ -6,9 +6,6 @@ namespace JobCoinAPI.ViewModels.UsuarioViewModels
 	public class AlteracaoUsuarioViewModel
 	{
 		[Required]
-		public Guid IdUsuario { get; set; }
-
-		[Required]
 		public Guid IdPerfil { get; set; }
 		
 		[Required]

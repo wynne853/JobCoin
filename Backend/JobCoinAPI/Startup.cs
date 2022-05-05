@@ -1,18 +1,16 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using JobCoinAPI.Data;
+using JobCoinAPI.Shared;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JobCoinAPI
 {
@@ -26,18 +24,23 @@ namespace JobCoinAPI
 		public IConfiguration Configuration { get; }
 
 		public void ConfigureServices(IServiceCollection services)
-		{
-			services.AddDbContext<DataContext>(options =>
-			{
-				options.UseNpgsql(Configuration.GetConnectionString("PostgreDB"));
-			});																			
-
+		{																		
 			services.AddControllers();
 
 			services.AddSwaggerGen(c =>
 			{
+				c.EnableAnnotations();
+
 				c.SwaggerDoc("v1", new OpenApiInfo { Title = "JobCoinAPI", Version = "v1" });
+
+				AddSwaggerConfigurationJwtBearer(c);
+
+				AddSwaggerResponsesDocumentations(c);
 			});
+
+			AddDatabaseConfiguration(services);
+
+			AddJwtBearerAuthentication(services);
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DataContext context)
@@ -58,6 +61,8 @@ namespace JobCoinAPI
 
 			app.UseRouting();
 
+			app.UseAuthentication();
+
 			app.UseAuthorization();
 
 			app.UseEndpoints(endpoints =>
@@ -66,6 +71,81 @@ namespace JobCoinAPI
 			});
 
 			context.Database.Migrate();
+		}
+
+		private void AddDatabaseConfiguration(IServiceCollection services)
+		{
+			services.AddDbContext<DataContext>(options =>
+			{
+				options.UseNpgsql(Configuration.GetConnectionString("PostgreDB"));
+			});
+		}
+
+		private void AddJwtBearerAuthentication(IServiceCollection services)
+		{
+			Autenticacao authentication = new Autenticacao();
+
+			services.AddSingleton(authentication);
+
+			services.AddAuthentication(x =>
+			{
+				x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+				x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+			})
+			.AddJwtBearer(x =>
+			{
+				x.RequireHttpsMetadata = false;
+				x.SaveToken = true;
+				x.TokenValidationParameters = new TokenValidationParameters
+				{
+					ValidateIssuerSigningKey = true,
+					IssuerSigningKey = authentication.Key,
+					ValidateIssuer = false,
+					ValidateAudience = false
+				};
+			});
+		}
+
+		private void AddSwaggerConfigurationJwtBearer(SwaggerGenOptions swaggerGenOptions)
+		{
+			var openApiSecurityScheme = new OpenApiSecurityScheme
+			{
+				Name = "Authorization",
+				BearerFormat = "JWT",
+				Scheme = "bearer",
+				Description = "Cole o seu 'token' aqui abaixo",
+				In = ParameterLocation.Header,
+				Type = SecuritySchemeType.Http
+			};
+
+			swaggerGenOptions.AddSecurityDefinition("Bearer", openApiSecurityScheme);
+
+			var security = new OpenApiSecurityRequirement
+			{
+				{
+					new OpenApiSecurityScheme
+					{
+						Reference = new OpenApiReference
+						{
+							Type = ReferenceType.SecurityScheme,
+							Id = "Bearer"
+						}
+					},
+					new string[]
+					{
+
+					}
+				}
+			};
+
+			swaggerGenOptions.AddSecurityRequirement(security);
+		}
+
+		private void AddSwaggerResponsesDocumentations(SwaggerGenOptions swaggerGenOptions)
+		{
+			var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
+			var xmlPath = System.IO.Path.Combine(AppContext.BaseDirectory, xmlFile);
+			swaggerGenOptions.IncludeXmlComments(xmlPath);
 		}
 	}
 }
