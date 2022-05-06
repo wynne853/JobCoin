@@ -146,6 +146,109 @@ namespace JobCoinAPI.Controllers
 		}
 
 		[HttpGet]
+		public async Task<IActionResult> GetAllAsync(
+			[FromServices] DataContext context,
+			[FromQuery] string nomeVaga,
+			[FromQuery] string descricaoVaga,
+			[FromQuery] float valorMenorQue,
+			[FromQuery] float valorMaiorQue,
+			[FromQuery] string ordenar,
+			[FromQuery] int pagina = 1,
+			[FromQuery] int numeroItens = 10)
+		{
+			try
+			{
+				var consultaVagas = context.Vagas
+					.AsNoTracking();
+
+				if (!string.IsNullOrEmpty(nomeVaga))
+				{
+					consultaVagas = consultaVagas
+						.Where(vaga =>
+							vaga.NomeVaga.ToLower().Contains(nomeVaga.ToLower()));
+				}
+
+				if (!string.IsNullOrEmpty(descricaoVaga))
+				{
+					consultaVagas = consultaVagas
+						.Where(vaga =>
+							vaga.DescricaoVaga.ToLower().Contains(descricaoVaga.ToLower()));
+				}
+
+				if (valorMenorQue > 0)
+				{
+					consultaVagas = consultaVagas
+						.Where(vaga =>
+							vaga.ValorVaga < valorMenorQue);
+				}
+
+				if (valorMaiorQue > 0)
+				{
+					consultaVagas = consultaVagas
+						.Where(vaga =>
+							vaga.ValorVaga > valorMaiorQue);
+				}
+
+				var camposOrdenacao = string.IsNullOrEmpty(ordenar) ? new List<string>(0) : ordenar.Split(",").ToList();
+
+				foreach (var campo in camposOrdenacao)
+				{
+					switch (campo)
+					{
+						case "nomeVaga":
+						case "+nomeVaga":
+							consultaVagas = consultaVagas
+								.OrderBy(vaga => vaga.NomeVaga);
+							break;
+						case "-nomeVaga":
+							consultaVagas = consultaVagas
+								.OrderByDescending(vaga => vaga.NomeVaga);
+							break;
+
+						case "descricaoVaga":
+						case "+descricaoVaga":
+							consultaVagas = consultaVagas
+								.OrderBy(vaga => vaga.DescricaoVaga);
+							break;
+						case "-descricaoVaga":
+							consultaVagas = consultaVagas
+								.OrderByDescending(vaga => vaga.DescricaoVaga);
+							break;
+
+						case "valorVaga":
+						case "+valorVaga":
+							consultaVagas = consultaVagas
+								.OrderBy(vaga => vaga.ValorVaga);
+							break;
+						case "-valorVaga":
+							consultaVagas = consultaVagas
+								.OrderByDescending(vaga => vaga.ValorVaga);
+							break;
+
+						default:
+							break;
+					}
+				}
+
+				int numeroTotalItens = await consultaVagas.CountAsync();
+
+				var vagas = await Paginacao<Vaga>
+					.PaginarConsulta(ref pagina, ref numeroItens, numeroTotalItens, consultaVagas).ToListAsync();
+
+				var vagasViewModels = VagaMapper.ConverterParaConsultaGeralVagaViewModel(vagas);
+
+				var retornoVagas = Paginacao<ConsultaGeralVagaViewModel>
+					.PegarPaginacao(numeroTotalItens, pagina, vagasViewModels);
+
+				return vagasViewModels == null ? NoContent() : Ok(retornoVagas);
+			}
+			catch (Exception e)
+			{
+				return StatusCode(500);
+			}
+		}
+
+		[HttpGet]
 		[Route("criadas/{idUsuario}")]
 		public async Task<IActionResult> GetAllCriadasAsync(
 			[FromServices] DataContext context,
