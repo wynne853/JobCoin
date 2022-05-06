@@ -20,7 +20,7 @@ namespace JobCoinAPI.Shared
 			if (numeroItensPorPagina > numeroTotalItens)
 			{
 				pagina = 1;
-				numeroItensPorPagina = numeroTotalItens;
+				numeroItensPorPagina = (numeroTotalItens > 0) ? numeroTotalItens : numeroItensPorPagina;
 			}
 
 			var numeroPaginas = CalcularNumeroPaginas(numeroTotalItens, numeroItensPorPagina);
@@ -40,7 +40,7 @@ namespace JobCoinAPI.Shared
 		{
 			return new Paginacao<T>
 			{
-				NumeroPaginas = CalcularNumeroPaginas(numeroTotalItens, itensPaginaAtual.Count()),
+				NumeroPaginas = (numeroTotalItens <= 0) ? 1 : CalcularNumeroPaginas(numeroTotalItens, itensPaginaAtual.Count()),
 				Pagina = numeroPaginaAtual,
 				ItensPagina = itensPaginaAtual
 			};
